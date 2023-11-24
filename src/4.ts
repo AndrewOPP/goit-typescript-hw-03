@@ -33,7 +33,6 @@ class House {
 
   comeIn(person: Person): void {
     if (this.door) this.tenants.push(person.name);
-    this.door = false;
   }
 
   openDoor(person: Person) {}
@@ -44,6 +43,7 @@ class MyHouse extends House {
     if (this.key === person.getKey()) {
       this.door = true;
       this.comeIn(person);
+      this.door = false;
       console.log(`Wellcome, ${person.name}`);
       return;
     }
