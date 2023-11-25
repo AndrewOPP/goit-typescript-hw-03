@@ -1,9 +1,5 @@
 class Key {
-  private signature: number;
-
-  constructor() {
-    this.signature = Math.round(Math.random() * 10);
-  }
+  private signature: number = Math.round(Math.random() * 10);
 
   getSignature(): number {
     return this.signature;
@@ -11,10 +7,7 @@ class Key {
 }
 
 class Person {
-  constructor(private key: Key, public name: string) {
-    this.key = key;
-    this.name = name;
-  }
+  constructor(private key: Key, public name: string) {}
 
   getKey(): Key {
     return this.key;
@@ -22,42 +15,36 @@ class Person {
 }
 
 class House {
-  door: boolean;
-  key: Key;
-  tenants: any[];
-  constructor(key: Key) {
-    this.door = false;
-    this.key = key;
-    this.tenants = [];
-  }
+  public door: boolean = false;
+  public tenants: Person[] = [];
+  constructor(public key: Key) {}
 
   comeIn(person: Person): void {
-    if (this.door) this.tenants.push(person.name);
+    if (this.door) this.tenants.push(person);
+    this.door = false;
   }
 
-  openDoor(person: Person) {}
+  openDoor(key: Key) {}
 }
 
 class MyHouse extends House {
-  openDoor(person: Person): void {
-    if (this.key === person.getKey()) {
+  openDoor(key: Key): void {
+    if (this.key.getSignature() === key.getSignature()) {
       this.door = true;
-      this.comeIn(person);
-      this.door = false;
-      console.log(`Wellcome, ${person.name}`);
-      return;
+      console.log("Door has opened");
     }
-    console.log(`Sorry,${person.name}, wrong key `);
+    console.log(`Sorry, wrong key `);
     return;
   }
 }
 const AndrewKey = new Key();
 
-const Andrew = new Person(AndrewKey, "Andrew");
 const Kirill = new Person(new Key(), "Kirill");
-const Ivan = new Person(AndrewKey, "Ivan");
+const Ivan = new Person(new Key(), "Ivan");
 const AndrewHouse = new MyHouse(AndrewKey);
 
-AndrewHouse.openDoor(Andrew);
-AndrewHouse.openDoor(Kirill);
-AndrewHouse.openDoor(Ivan);
+AndrewHouse.openDoor(AndrewKey);
+AndrewHouse.comeIn(Kirill);
+
+AndrewHouse.openDoor(AndrewKey);
+AndrewHouse.comeIn(Ivan);
